@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:todoapp/components/TasksList.dart';
 import 'package:todoapp/components/AddTaskComponent.dart';
+import 'package:todoapp/models/task.dart';
 
 const whiteText = TextStyle(
   color: Colors.black,
 );
 
-class TaskScreen extends StatelessWidget {
-  Widget buildBottomSheet(BuildContext context) {
-    return AddTaskComponent();
-  }
+class TaskScreen extends StatefulWidget {
+  @override
+  _TaskScreenState createState() => _TaskScreenState();
+}
+
+class _TaskScreenState extends State<TaskScreen> {
+  List<Task> tasks = [
+    Task(name: 'Finish this tutorial', isDone: false),
+    Task(name: 'Finish nodeJs', isDone: false),
+  ];
+
+//  Widget buildBottomSheet(BuildContext context) {
+//    return AddTaskComponent();
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +34,12 @@ class TaskScreen extends StatelessWidget {
             builder: (context) => SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                child: AddTaskComponent(),
+                child: AddTaskComponent((newTask) {
+                  setState(() {
+                    tasks.add(Task(name: newTask));
+                  });
+                  Navigator.pop(context);
+                }),
               ),
             ),
           );
@@ -65,7 +81,7 @@ class TaskScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    ' XX tasks',
+                    '${tasks.length} tasks',
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.white,
@@ -88,7 +104,7 @@ class TaskScreen extends StatelessWidget {
                     topLeft: Radius.circular(20),
                   ),
                 ),
-                child: TasksList(),
+                child: TasksList(tasks),
               ),
             ),
           ],
